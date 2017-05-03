@@ -7,10 +7,6 @@
  *      INCLUDES
  *********************/
 #include "indev.h"
-#include "hw_conf.h"
-#include "hw/dev/tp/XPT2046.h"
-#include "hw/dev/tp/FT5406EE8.h"
-#include "hw/dev/tp/mouse.h"
 
 /*********************
  *      DEFINES
@@ -37,6 +33,14 @@
  **********************/
 
 /**
+ * Initialize your input devices here
+ */
+void indev_init(void)
+{
+
+}
+
+/**
  * Read an input device
  * @param indev_id id of the input device to read
  * @param x put the x coordinate here
@@ -45,23 +49,23 @@
  */
 bool indev_get(uint8_t indev_id, int16_t * x, int16_t * y)
 {
-#if USE_XPT2046 != 0
-    return xpt2046_get(x, y);
-#endif
+	/*Check for invalid ids*/
+	if(indev_id >= INDEV_NUM) {
+		*x = 0;
+		*y = 0;
+		return false;
+	}
 
-#if USE_FT5406EE8 != 0
-    return ft5406ee8_get(x, y);
-#endif
 
-#if USE_MOUSE != 0
-    return mouse_get(x, y);
-#endif
-    
-    *x = 0;
-    *y = 0;
-    return false;
+	if(indev_id == 0) {
+		/*Read your first input device here (e.g. touchpad)*/
+	} else if(indev_id == 1) {
+		/*Read your second input device here (e.g. buttons)*/
+	}
 
+	return false;	/*In last case return with false*/
 }
+
 /**********************
  *   STATIC FUNCTIONS
  **********************/

@@ -6,12 +6,7 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "hw_conf.h"
 #include "hal/disp/disp.h"
-#include "hw/dev/dispc/SSD1963.h"
-#include "hw/dev/dispc/R61581.h"
-#include "hw/dev/dispc/ST7565.h"
-#include "hw/per/tft.h"
 
 /*********************
  *      DEFINES
@@ -36,54 +31,86 @@
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
+
 /**
- * Fill the previously marked area with a color
- * @param disp_id ID of the display. 0xFF means all display
+ * Initialize your display here
+ */
+void disp_init(void)
+{
+
+}
+
+/**
+ * Fill a rectangular area with a color
+ * @param x1 left coordinate of the rectangle
+ * @param x2 right coordinate of the rectangle
+ * @param y1 top coordinate of the rectangle
+ * @param y2 bottom coordinate of the rectangle
  * @param color fill color
  */
 void disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color)
 {
-#if USE_R61581 != 0
-    r61581_fill(color);
-#endif
+    /*Return if the area is out the screen*/
+    if(x2 < 0) return;
+    if(y2 < 0) return;
+    if(x1 > TFT_HOR_RES - 1) return;
+    if(y1 > TFT_VER_RES - 1) return;
 
-#if USE_SSD1963 != 0
-    ssd1963_fill(color);
-#endif
+    /*Truncate the area to the screen*/
+    int32_t act_x1 = x1 < 0 ? 0 : x1;
+    int32_t act_y1 = y1 < 0 ? 0 : y1;
+    int32_t act_x2 = x2 > TFT_HOR_RES - 1 ? TFT_HOR_RES - 1 : x2;
+    int32_t act_y2 = y2 > TFT_VER_RES - 1 ? TFT_VER_RES - 1 : y2;
 
-#if USE_TFT != 0
-    tft_fill(x1, y1, x2, y2, color);
-#endif
+	uint32_t x;
+	uint32_t y;
 
-#if USE_ST7565 != 0
-    st7565_fill(color);
-#endif
+	/*Fill the remaining area*/
+	for(x = act_x1; x <= act_x2; x++) {
+		for(y = act_y1; y <= act_y2; y++) {
+			/*Your specific function comes here!*/
+			my_put_pixel(x, y, color.full);
+		}
+	}
 }
 
 /**
- * Put a color map to the previously marked area
- * @param disp_id ID of the display. 0xFF means all display
+ * Put a color map to a rectangular area
+ * @param x1 left coordinate of the rectangle
+ * @param x2 right coordinate of the rectangle
+ * @param y1 top coordinate of the rectangle
+ * @param y2 bottom coordinate of the rectangle
  * @param color_p pointer to an array of colors
  */
 void disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t * color_p)
 {
-#if USE_R61581 != 0
-    r61581_map(color_p);
-#endif
+	/*Return if the area is out the screen*/
+	if(x2 < 0) return;
+	if(y2 < 0) return;
+	if(x1 > TFT_HOR_RES - 1) return;
+	if(y1 > TFT_VER_RES - 1) return;
 
-#if USE_SSD1963 != 0
-    ssd1963_map(color_p);
-#endif
+	/*Truncate the area to the screen*/
+	int32_t act_x1 = x1 < 0 ? 0 : x1;
+	int32_t act_y1 = y1 < 0 ? 0 : y1;
+	int32_t act_x2 = x2 > TFT_HOR_RES - 1 ? TFT_HOR_RES - 1 : x2;
+	int32_t act_y2 = y2 > TFT_VER_RES - 1 ? TFT_VER_RES - 1 : y2;
 
-#if USE_TFT != 0
-    tft_map(x1, y1, x2, y2, color_p);
-#endif
+	uint32_t x;
+	uint32_t y;
 
-#if USE_ST7565 != 0
-    st7565_map(vdb.buf);
-#endif
+	/*Put the map to the remaining area*/
+	for(y = act_y1; y <= act_y2; y++) {
+		for(x = act_x1; x <= act_x2; x++) {
+			/*Your specific function comes here!*/
+			my_put_pixel(x, y, color_p->full);
+			color_p++;
+		}
+		color_p += x2 - act_x2;	/*Skip the parts out of the screen*/
+	}
 }
 
 /**********************
  *   STATIC FUNCTIONS
  **********************/
+

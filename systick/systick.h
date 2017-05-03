@@ -28,7 +28,6 @@ uint32_t systick_elaps(uint32_t prev_tick);
 bool systick_add_cb(void (*cb) (void));
 void systick_rem_cb(void (*cb) (void));
 
-
 /**********************
  *      MACROS
  **********************/

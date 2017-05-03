@@ -6,8 +6,6 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "hw_conf.h"
-#include "hw/per/tick.h"
 #include "systick.h"
 
 /*********************
@@ -40,7 +38,7 @@
  */
 uint32_t systick_get(void)
 {
-	return tick_get();
+	return my_tick_get();	/*Call your specific tick get function*/
 }
 
 /**
@@ -50,7 +48,18 @@ uint32_t systick_get(void)
  */
 uint32_t systick_elaps(uint32_t prev_tick)
 {
-	return tick_elaps(prev_tick);
+	uint32_t act_time = systick_get();
+
+	/*If there is no overflow in sys_time
+	 simple subtract*/
+	if(act_time >= prev_tick) {
+		prev_tick = act_time - prev_tick;
+	} else {
+		prev_tick = UINT32_MAX - prev_tick + 1;
+		prev_tick += act_time;
+	}
+
+	return prev_tick;
 }
 
 /**
@@ -60,7 +69,8 @@ uint32_t systick_elaps(uint32_t prev_tick)
  */
 bool systick_add_cb(void (*cb) (void))
 {
-	return tick_add_func(cb);
+	/* Optionally you might handle adding call backs to sys. tick interrupt*/
+	return false;
 }
 
 /**
@@ -69,7 +79,7 @@ bool systick_add_cb(void (*cb) (void))
  */
 void systick_rem_cb(void (*cb) (void))
 {
-	 tick_rem_func(cb);
+	/* Optionally you might handle removing call backs to sys. tick interrupt*/
 }
 
 /**********************
