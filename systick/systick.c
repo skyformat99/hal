@@ -63,7 +63,7 @@ uint32_t systick_elaps(uint32_t prev_tick)
 }
 
 /**
- * Add a callback function to the systick interrupt
+ * Add a callback function to the systick interrupt (optional, used by a few spwial misc. library modules)
  * @param cb a function pointer
  * @return true: 'cb' added to the systick callbacks, false: 'cb' not added
  */
@@ -74,12 +74,12 @@ bool systick_add_cb(void (*cb) (void))
 }
 
 /**
- * Remove a callback function from the systick callbacks
+ * Remove a callback function from the systick callbacks (optional, used by a few spwial misc. library modules)
  * @param cb a function pointer (added with 'systick_add_cb')
  */
 void systick_rem_cb(void (*cb) (void))
 {
-	/* Optionally you might handle removing call backs to sys. tick interrupt*/
+	/* Optionally you might handle removing call backs from sys. tick interrupt*/
 }
 
 /**********************

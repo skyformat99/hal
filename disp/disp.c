@@ -82,7 +82,7 @@ void disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color)
  * @param y2 bottom coordinate of the rectangle
  * @param color_p pointer to an array of colors
  */
-void disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t * color_p)
+void disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * color_p)
 {
 	/*Return if the area is out the screen*/
 	if(x2 < 0) return;
