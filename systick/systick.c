@@ -38,7 +38,10 @@
  */
 uint32_t systick_get(void)
 {
-	return my_tick_get();	/*Call your specific tick get function*/
+    /*Call your specific tick get function*/
+    /*return my_tick_get(); */
+
+    return 0;
 }
 
 /**

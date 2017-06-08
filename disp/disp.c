@@ -6,7 +6,7 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "hal/disp/disp.h"
+#include "disp.h"
 
 /*********************
  *      DEFINES
@@ -69,7 +69,7 @@ void disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color)
 	for(x = act_x1; x <= act_x2; x++) {
 		for(y = act_y1; y <= act_y2; y++) {
 			/*Your specific function comes here!*/
-			my_put_pixel(x, y, color.full);
+			/*my_put_pixel(x, y, color.full);*/
 		}
 	}
 }
@@ -103,7 +103,7 @@ void disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * co
 	for(y = act_y1; y <= act_y2; y++) {
 		for(x = act_x1; x <= act_x2; x++) {
 			/*Your specific function comes here!*/
-			my_put_pixel(x, y, color_p->full);
+			/*my_put_pixel(x, y, color_p->full);*/
 			color_p++;
 		}
 		color_p += x2 - act_x2;	/*Skip the parts out of the screen*/

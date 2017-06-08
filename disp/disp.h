@@ -6,11 +6,21 @@
 #ifndef DISP_H
 #define DISP_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*********************
  *      INCLUDES
  *********************/
 #include <stdint.h>
-#include "misc/gfx/color.h"
+#include "../hal.h"
+
+#define HAL_PATH(x) ../x/gfx/color.h
+#define STR(x) _STR(x)
+#define _STR(x)   #x
+
+#include  STR(HAL_PATH(HAL_MISC_INCLUDE))
 
 /*********************
  *      DEFINES
@@ -55,5 +65,9 @@ void disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * co
 /**********************
  *      MACROS
  **********************/
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif

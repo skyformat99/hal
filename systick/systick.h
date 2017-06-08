@@ -6,6 +6,10 @@
 #ifndef SYSTICK_H
 #define SYSTICK_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*********************
  *      INCLUDES
  *********************/
@@ -54,5 +58,9 @@ void systick_rem_cb(void (*cb) (void));
 /**********************
  *      MACROS
  **********************/
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif
