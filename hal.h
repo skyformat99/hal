@@ -10,7 +10,6 @@
 extern "C" {
 #endif
 
-
 /*********************
  *      INCLUDES
  *********************/
@@ -18,7 +17,11 @@ extern "C" {
 /*********************
  *      DEFINES
  *********************/
-#define HAL_MISC_INCLUDE   ../misc      /*misc. folder include path from hal root*/
+ #include "disp/dispi.h"
+ #include "indev/indev.h"
+ #include "eth/deth.h"
+ #include "wifi/wifi.h"
+ #include "gsm/gsm.h" 
 
 /**********************
  *      TYPEDEFS
@@ -31,7 +34,6 @@ extern "C" {
 /**********************
  *      MACROS
  **********************/
-
 
 #ifdef __cplusplus
 } /* extern "C" */

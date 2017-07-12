@@ -14,13 +14,7 @@ extern "C" {
  *      INCLUDES
  *********************/
 #include <stdint.h>
-#include "../hal.h"
-
-#define HAL_PATH(x) ../x/gfx/color.h
-#define STR(x) _STR(x)
-#define _STR(x)   #x
-
-#include  STR(HAL_PATH(HAL_MISC_INCLUDE))
+#include "misc/gfx/color.h"
 
 /*********************
  *      DEFINES
@@ -28,6 +22,8 @@ extern "C" {
 /*TODO define your screen size*/
 #define TFT_HOR_RES 240
 #define TFT_VER_RES 320
+
+#define DISP_HW_ACC 0	/*Enable hardware accelerator ('disp_color_cpy()' has to be implemented)*/
 
 /**********************
  *      TYPEDEFS
@@ -61,6 +57,17 @@ void disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color);
  * @param color_p pointer to an array of colors
  */
 void disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * color_p);
+
+#if DISP_HW_ACC != 0
+/**
+ * Copy pixels to destination memory using opacity with GPU (hardware accelerator)
+ * @param dest a memory address. Copy 'src' here.
+ * @param src pointer to pixel map. Copy it to 'dest'.
+ * @param length number of pixels in 'src'
+ * @param opa opacity (0, OPA_TRANSP: transparent ... 255, OPA_COVER, fully cover)
+ */	
+void disp_color_cpy(color_t * dest, const color_t * src, uint32_t length, opa_t opa);
+#endif
 
 /**********************
  *      MACROS
