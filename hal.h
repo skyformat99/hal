@@ -17,15 +17,19 @@ extern "C" {
 /*********************
  *      DEFINES
  *********************/
- #include "disp/dispi.h"
- #include "indev/indev.h"
- #include "eth/deth.h"
- #include "wifi/wifi.h"
- #include "gsm/gsm.h" 
+ #include "disp/hal_disp.h"
 
 /**********************
  *      TYPEDEFS
  **********************/
+typedef enum _hal_ret_e {
+    HAL_OK,
+    HAL_ERR_INVAL,
+    HAL_ERR_NOMEM,
+    HAL_ERR_NODEV,
+    HAL_ERR_LISTFULL,
+    HAL_ERR_LISTEMPTY,
+} hal_ret_e;
 
 /**********************
  * GLOBAL PROTOTYPES
