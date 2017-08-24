@@ -10,8 +10,9 @@
  *      INCLUDES
  *********************/
 #include <stdint.h>
+#include <stddef.h>
 #include "hal_disp.h"
-#include "misc/dyn_mem.h"
+#include "../../misc/mem/dyn_mem.h"
 
 /*********************
  *      DEFINES
@@ -30,7 +31,7 @@
  **********************/
 typedef struct _disp_drv_node_t {
     disp_drv_t *driver;
-    disp_drv_node_t *next;
+    struct _disp_drv_node_t *next;
 } disp_drv_node_t;
 
 static disp_drv_node_t *disp_drv_list = NULL;
@@ -114,9 +115,6 @@ int32_t hal_disp_get_active(void)
 {
     int32_t i;
     disp_drv_node_t *node;
-
-    if (id < 0)
-        return -HAL_ERR_INVAL;
 
     i = 0;
     node = disp_drv_list;

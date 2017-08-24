@@ -16,7 +16,8 @@ extern "C" {
  *      INCLUDES
  *********************/
 #include <stdint.h>
-#include "misc/gfx/color.h"
+#include "../hal.h"
+#include "../../misc/gfx/color.h"
 
 /*********************
  *      DEFINES
@@ -41,10 +42,10 @@ typedef struct _disp_drv_t {
     int32_t h_res;
     int32_t v_res;
     void (*init)(void);
-    void fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color);
-    void map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * color_p);
+    void (*fill)(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color);
+    void (*map)(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * color_p);
 #if DISP_HW_ACC != 0
-    void color_cpy(color_t * dest, const color_t * src, uint32_t length, opa_t opa);
+    void (*color_cpy)(color_t * dest, const color_t * src, uint32_t length, opa_t opa);
 #endif
 } disp_drv_t;
 

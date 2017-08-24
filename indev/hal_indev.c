@@ -9,7 +9,7 @@
  *      INCLUDES
  *********************/
 #include "hal_indev.h"
-#include "../misc/mem/linked_list.h"
+#include "../../misc/mem/linked_list.h"
 
 /*********************
  *      DEFINES
@@ -25,7 +25,7 @@
 typedef struct _indev_drv_node_t {
     indev_drv_t *driver;
     int32_t disable;
-    indev_drv_node_t *next;
+    struct _indev_drv_node_t *next;
 } indev_drv_node_t;
 
 static indev_drv_node_t *indev_drv_list = NULL;
@@ -34,7 +34,8 @@ static indev_drv_node_t *indev_drv_list = NULL;
  *  STATIC VARIABLES
  **********************/
 static ll_dsc_t indev_reports;
-static int32_t indev_max_reports, indev_report_count = 0;
+static int32_t indev_max_reports = 10;  /*TODO FIFO might better then linked list? (less overhead)*/
+static int32_t indev_report_count = 0;
 
 /**********************
  *      MACROS

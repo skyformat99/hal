@@ -17,6 +17,7 @@ extern "C" {
  *********************/
 #include <stdbool.h>
 #include <stdint.h>
+#include "../hal.h"
 
 /*********************
  *      DEFINES
@@ -48,7 +49,7 @@ typedef struct _indev_touch_t {
     int16_t x;
     int16_t y;
     int32_t longpress; /* 1 if its a long press, 0 short press */
-} indev_touch_e;
+} indev_touch_t;
 
 typedef struct _indev_pointer_t {
     int16_t x;
@@ -130,9 +131,11 @@ void hal_indev_disable(indev_type_e type);
  */
 
 /**
- * Initialize your input devices here
+ * Initialize registered input device drivers
+ *
+ * @param Maximum allowed reports (default 10)
  */
-void hal_indev_init(void);
+void hal_indev_init(int32_t max_reports);
 
 /**
  * Read an input data reported by Input devices
