@@ -1,12 +1,12 @@
 /**
- * @file disp_hal.h
+ * @file hal_disp.h
  *
  * @description Display Driver HAL interface header file
  *
  */
 
-#ifndef DISP_H
-#define DISP_H
+#ifndef HAL_DISP_H
+#define HAL_DISP_H
 
 #ifdef __cplusplus
 extern "C" {

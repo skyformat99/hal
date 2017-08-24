@@ -1,6 +1,6 @@
 
 /**
- * @file disp_hal.c
+ * @file hal_disp.c
  *
  * @description HAL layer for display driver
  *
