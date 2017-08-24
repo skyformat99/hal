@@ -56,7 +56,7 @@ int32_t hal_disp_drv_register(disp_drv_t *driver)
 
     node = dm_alloc(sizeof(disp_drv_node_t));
     if (!node)
-        return -HAL_DISP_ERR_NOMEM;
+        return -HAL_ERR_NOMEM;
 
     node->driver = driver;
     node->next = NULL;
@@ -74,7 +74,7 @@ int32_t hal_disp_drv_register(disp_drv_t *driver)
         last->next = node;
     }
 
-    return HAL_DISP_OK;
+    return HAL_OK;
 }
 
 /*
@@ -89,7 +89,7 @@ int32_t hal_disp_set_active(int32_t id)
     disp_drv_node_t *node;
 
     if (id < 0)
-        return -HAL_DISP_ERR_INVAL;
+        return -HAL_ERR_INVAL;
 
     i = 0;
     node = disp_drv_list;
@@ -102,7 +102,7 @@ int32_t hal_disp_set_active(int32_t id)
         i++;
     }
 
-    return node ? HAL_DISP_OK : -HAL_DISP_ERR_NODEV;
+    return node ? HAL_OK : -HAL_ERR_NODEV;
 }
 
 /**
@@ -116,7 +116,7 @@ int32_t hal_disp_get_active(void)
     disp_drv_node_t *node;
 
     if (id < 0)
-        return -HAL_DISP_ERR_INVAL;
+        return -HAL_ERR_INVAL;
 
     i = 0;
     node = disp_drv_list;
@@ -127,7 +127,7 @@ int32_t hal_disp_get_active(void)
         i++;
     }
 
-    return node ? i : -HAL_DISP_ERR_NODEV;
+    return node ? i : -HAL_ERR_NODEV;
 }
 
 /**
