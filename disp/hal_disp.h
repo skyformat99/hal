@@ -17,7 +17,7 @@ extern "C" {
  *********************/
 #include <stdint.h>
 #include "../hal.h"
-#include "../../misc/gfx/color.h"
+#include "misc/gfx/color.h"
 
 /*********************
  *      DEFINES

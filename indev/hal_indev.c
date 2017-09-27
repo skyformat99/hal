@@ -9,7 +9,7 @@
  *      INCLUDES
  *********************/
 #include "hal_indev.h"
-#include "../../misc/mem/linked_list.h"
+#include "misc/mem/linked_list.h"
 
 /*********************
  *      DEFINES

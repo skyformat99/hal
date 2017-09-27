@@ -7,10 +7,12 @@
  *      INCLUDES
  *********************/
 #include "systick.h"
+#include <stddef.h>
 
 /*********************
  *      DEFINES
  *********************/
+#define LV_HAL_TICK_CALLBACK_NUM     32
 
 /**********************
  *      TYPEDEFS
@@ -23,6 +25,10 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
+static uint32_t sys_time = 0;
+static volatile uint8_t tick_irq_flag;
+static volatile uint8_t tick_cb_sem;    /*Semaphore for tick callbacks*/
+static void (*tick_callbacks[LV_HAL_TICK_CALLBACK_NUM])(void);
 
 /**********************
  *      MACROS
@@ -33,15 +39,36 @@
  **********************/
 
 /**
+ * Call this function every milliseconds
+ */
+void lv_hal_tick_handler(void)
+{
+    sys_time++;
+
+    /*Run the callback functions*/
+    uint8_t i;
+    for (i = 0; i < LV_HAL_TICK_CALLBACK_NUM; i++) {
+        if (tick_callbacks[i] != NULL) {
+            tick_callbacks[i]();
+        }
+    }
+    tick_irq_flag = 0;       /*lv_hal_systick_get set it to know there was an IRQ*/
+}
+
+/**
  * Get the elapsed milliseconds since start up
  * @return the elapsed milliseconds
  */
-uint32_t systick_get(void)
+uint32_t lv_hal_tick_get(void)
 {
-    /*Call your specific tick get function*/
-    /*return my_tick_get(); */
 
-    return 0;
+    uint32_t result;
+    do {
+        tick_irq_flag = 1;
+        result = sys_time;
+    } while(!tick_irq_flag);     /*Systick IRQ clears this flag. Continue until make a non interrupted cycle */
+
+    return sys_time;
 }
 
 /**
@@ -49,7 +76,7 @@ uint32_t systick_get(void)
  * @param prev_tick a previous time stamp from 'systick_get'
  * @return the elapsed milliseconds since 'prev_tick'
  */
-uint32_t systick_elaps(uint32_t prev_tick)
+uint32_t lv_hal_tick_elaps(uint32_t prev_tick)
 {
 	uint32_t act_time = systick_get();
 
@@ -66,25 +93,62 @@ uint32_t systick_elaps(uint32_t prev_tick)
 }
 
 /**
- * Add a callback function to the systick interrupt (optional, used by a few spwial misc. library modules)
+ * Add a callback function to the systick interrupt
  * @param cb a function pointer
  * @return true: 'cb' added to the systick callbacks, false: 'cb' not added
  */
-bool systick_add_cb(void (*cb) (void))
+bool lv_hal_tick_add_callback(void (*cb) (void))
 {
-	/* Optionally you might handle adding call backs to sys. tick interrupt*/
-	return false;
+    bool suc = false;
+
+    /*Take the semaphore. Be sure it is set*/
+    do {
+        tick_cb_sem = 1;
+    } while(!tick_cb_sem);
+
+    uint8_t i;
+    for (i = 0; i < LV_HAL_TICK_CALLBACK_NUM; i++) {
+        if (tick_callbacks[i] == NULL) {
+            tick_callbacks[i] = cb;
+            suc = true;
+            break;
+        }
+    }
+
+    /*Release the semaphore. Be sure it is cleared*/
+    do {
+        tick_cb_sem = 0;
+    } while(tick_cb_sem);
+
+    return suc;
 }
 
 /**
- * Remove a callback function from the systick callbacks (optional, used by a few spwial misc. library modules)
- * @param cb a function pointer (added with 'systick_add_cb')
+ * Remove a callback function from the tick callbacks
+ * @param cb a function pointer (added with 'lv_hal_tick_add_callback')
  */
-void systick_rem_cb(void (*cb) (void))
+void lv_hal_tick_rem_callback(void (*cb) (void))
 {
-	/* Optionally you might handle removing call backs from sys. tick interrupt*/
+    /*Take the semaphore. Be sure it is set*/
+    do {
+        tick_cb_sem = 1;
+    } while(!tick_cb_sem);
+
+    uint8_t i;
+    for (i = 0; i < LV_HAL_TICK_CALLBACK_NUM; i++) {
+        if (tick_callbacks[i] == cb) {
+            tick_callbacks[i] = NULL;
+            break;
+        }
+    }
+
+    /*Release the semaphore. Be sure it is cleared*/
+    do {
+        tick_cb_sem = 0;
+    } while(tick_cb_sem);
 }
 
 /**********************
  *   STATIC FUNCTIONS
  **********************/
+
