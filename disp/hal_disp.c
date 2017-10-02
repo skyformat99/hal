@@ -132,21 +132,6 @@ int32_t hal_disp_get_active(void)
  * Following HAL Functions are called from lvgl Library
  */
 
-/**
- * Initialize all registered display drivers
- */
-void hal_disp_init(void)
-{
-    disp_drv_node_t *node = disp_drv_list;
-    disp_drv_t *drv;
-
-    while (node) {
-        drv = node->driver;
-        if (drv->init)
-            drv->init();
-        node = node->next;
-    }
-}
 
 /**
  * Fill a rectangular area with a color

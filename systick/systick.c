@@ -68,7 +68,7 @@ uint32_t lv_hal_tick_get(void)
         result = sys_time;
     } while(!tick_irq_flag);     /*Systick IRQ clears this flag. Continue until make a non interrupted cycle */
 
-    return sys_time;
+    return result;
 }
 
 /**
@@ -78,7 +78,7 @@ uint32_t lv_hal_tick_get(void)
  */
 uint32_t lv_hal_tick_elaps(uint32_t prev_tick)
 {
-	uint32_t act_time = systick_get();
+	uint32_t act_time = lv_hal_tick_get();
 
 	/*If there is no overflow in sys_time
 	 simple subtract*/

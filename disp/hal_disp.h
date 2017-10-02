@@ -41,7 +41,6 @@ typedef struct _disp_drv_t {
     const char *name;
     int32_t h_res;
     int32_t v_res;
-    void (*init)(void);
     void (*fill)(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color);
     void (*map)(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * color_p);
 #if DISP_HW_ACC != 0
