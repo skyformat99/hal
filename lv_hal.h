@@ -13,22 +13,23 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
+#include "lv_hal_disp.h"
+#include "lv_hal_indev.h"
+#include <lvgl/lv_hal/lv_hal_tick.h>
+#include "lv_hal_indev_keycode.h"
 
 /*********************
  *      DEFINES
  *********************/
- #include "disp/hal_disp.h"
 
 /**********************
  *      TYPEDEFS
  **********************/
 typedef enum _hal_ret_e {
-    HAL_OK,
-    HAL_ERR_INVAL,
-    HAL_ERR_NOMEM,
-    HAL_ERR_NODEV,
-    HAL_ERR_LISTFULL,
-    HAL_ERR_LISTEMPTY,
+    LV_HAL_OK,
+    LV_HAL_ERR_INV,
+    LV_HAL_ERR_NOMEM,
+    LV_HAL_ERR_NODEV,
 } hal_ret_e;
 
 /**********************

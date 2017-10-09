@@ -30,33 +30,33 @@ extern "C" {
 /**
  * Call this function every milliseconds
  */
-void lv_hal_tick_handler(void);
+void lv_tick_handler(void);
 
 /**
  * Get the elapsed milliseconds since start up
  * @return the elapsed milliseconds
  */
-uint32_t lv_hal_tick_get(void);
+uint32_t lv_tick_get(void);
 
 /**
  * Get the elapsed milliseconds science a previous time stamp
  * @param prev_tick a previous time stamp from 'systick_get'
  * @return the elapsed milliseconds since 'prev_tick'
  */
-uint32_t lv_hal_tick_elaps(uint32_t prev_tick);
+uint32_t lv_tick_elaps(uint32_t prev_tick);
 
 /**
  * Add a callback function to the systick interrupt
  * @param cb a function pointer
  * @return true: 'cb' added to the systick callbacks, false: 'cb' not added
  */
-bool lv_hal_tick_add_callback(void (*cb) (void));
+bool lv_tick_add_callback(void (*cb) (void));
 
 /**
  * Remove a callback function from the tick callbacks
  * @param cb a function pointer (added with 'lv_hal_tick_add_callback')
  */
-void lv_hal_tick_rem_callback(void (*cb) (void));
+void lv_tick_rem_callback(void (*cb) (void));
 
 /**********************
  *      MACROS

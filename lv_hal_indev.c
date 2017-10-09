@@ -8,7 +8,7 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "hal_indev.h"
+#include "../lv_hal/lv_hal_indev.h"
 #include "misc/mem/linked_list.h"
 
 /*********************
@@ -42,16 +42,15 @@ static lv_indev_t *indev_list = NULL;
  * @param driver Input Device driver structure
  * @return 0 on success, -ve on error
  */
-int32_t lv_hal_indev_drv_register(lv_hal_indev_drv_t *driver)
+int32_t lv_indev_drv_register(lv_hal_indev_drv_t *driver)
 {
     lv_indev_t *node;
 
     node = dm_alloc(sizeof(lv_indev_t));
     if (!node)
-        return -HAL_ERR_NOMEM;
+        return -LV_HAL_ERR_NOMEM;
 
     memcpy(&node->drv, driver, sizeof(lv_hal_indev_drv_t));
-    node->disable = 0;
 
     node->next = NULL;
 
@@ -65,35 +64,42 @@ int32_t lv_hal_indev_drv_register(lv_hal_indev_drv_t *driver)
         last->next = node;
     }
 
-    return HAL_OK;
+    return LV_HAL_OK;
 }
 
 /**
- * Enable device by type
- *
- * @description Enable all input device defined by type
- *
- * @param type Input device type
+ * Get the next input device.
+ * @param indev pointer to the current input device. NULL to initialize.
+ * @return the next input devise or NULL if no more. Give the first input device when the parameter is NULL
  */
-void lv_hal_indev_enable(lv_hal_indev_type_t type, bool enable)
-{
-    lv_indev_t *node = indev_list;
-
-    while (node) {
-        if (node->drv.type == type) node->disable = enable == false ? 1 : 0;
-        node = node->next;
-    }
-}
-
-lv_indev_t * lv_hal_indev_next(lv_indev_t * drv)
+lv_indev_t * lv_indev_next(lv_indev_t * indev)
 {
 
-    if(drv == NULL) {
+    if(indev == NULL) {
         return &indev_list[0];
     } else {
         if(indev_list->next == NULL) return NULL;
         else return indev_list->next;
     }
+}
+
+/**
+ * Read data from an input device.
+ * @param indev pointer to an input device
+ * @param data input device will write its data here
+ * @return false: no more data; true: there more data to read (buffered)
+ */
+bool lv_indev_get(lv_indev_t * indev, lv_hal_indev_data_t *data)
+{
+    bool cont = false;
+
+    if(indev->drv.get_data) {
+        cont = indev->drv.get_data(data);
+    } else {
+        memset(data, 0, sizeof(lv_hal_indev_data_t));
+    }
+
+    return cont;
 }
 
 /**********************

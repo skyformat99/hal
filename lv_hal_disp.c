@@ -11,7 +11,7 @@
  *********************/
 #include <stdint.h>
 #include <stddef.h>
-#include "hal_disp.h"
+#include "../lv_hal/lv_hal_disp.h"
 #include "misc/mem/dyn_mem.h"
 
 /*********************
@@ -51,13 +51,13 @@ static disp_drv_t *active;
  * @param driver Display driver structure
  * @return 0 on success, -ve on error
  */
-int32_t hal_disp_drv_register(disp_drv_t *driver)
+int32_t lv_disp_drv_register(disp_drv_t *driver)
 {
     disp_drv_node_t *node;
 
     node = dm_alloc(sizeof(disp_drv_node_t));
     if (!node)
-        return -HAL_ERR_NOMEM;
+        return -LV_HAL_ERR_NOMEM;
 
     node->driver = driver;
     node->next = NULL;
@@ -75,22 +75,22 @@ int32_t hal_disp_drv_register(disp_drv_t *driver)
         last->next = node;
     }
 
-    return HAL_OK;
+    return LV_HAL_OK;
 }
 
-/*
+/**
  * Set Active Display by ID
  *
  * @param id Display ID to set as active
  * @return 0 on success, -ve on error
  */
-int32_t hal_disp_set_active(int32_t id)
+int32_t lv_disp_set_active(int32_t id)
 {
     int32_t i;
     disp_drv_node_t *node;
 
     if (id < 0)
-        return -HAL_ERR_INVAL;
+        return -LV_HAL_ERR_INV;
 
     i = 0;
     node = disp_drv_list;
@@ -103,7 +103,7 @@ int32_t hal_disp_set_active(int32_t id)
         i++;
     }
 
-    return node ? HAL_OK : -HAL_ERR_NODEV;
+    return node ? LV_HAL_OK : -LV_HAL_ERR_NODEV;
 }
 
 /**
@@ -111,7 +111,7 @@ int32_t hal_disp_set_active(int32_t id)
  *
  * @return Active ID of display on success else -ve on error
  */
-int32_t hal_disp_get_active(void)
+int32_t lv_disp_get_active(void)
 {
     int32_t i;
     disp_drv_node_t *node;
@@ -125,13 +125,8 @@ int32_t hal_disp_get_active(void)
         i++;
     }
 
-    return node ? i : -HAL_ERR_NODEV;
+    return node ? i : -LV_HAL_ERR_NODEV;
 }
-
-/**
- * Following HAL Functions are called from lvgl Library
- */
-
 
 /**
  * Fill a rectangular area with a color
@@ -141,7 +136,7 @@ int32_t hal_disp_get_active(void)
  * @param y2 bottom coordinate of the rectangle
  * @param color fill color
  */
-void hal_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color)
+void lv_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color)
 {
     if (active && active->fill)
         active->fill(x1, y1, x2, y2, color);
@@ -155,7 +150,7 @@ void hal_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, color_t color
  * @param y2 bottom coordinate of the rectangle
  * @param color_p pointer to an array of colors
  */
-void hal_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * color_p)
+void lv_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t * color_p)
 {
     if (active && active->map)
         active->map(x1, y1, x2, y2, color_p);
@@ -170,7 +165,7 @@ void hal_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const color_t 
  * @param length number of pixels in 'src'
  * @param opa opacity (0, OPA_TRANSP: transparent ... 255, OPA_COVER, fully cover)
  */
-void hal_disp_color_cpy(color_t * dest, const color_t * src, uint32_t length, opa_t opa)
+void lv_disp_color_cpy(color_t * dest, const color_t * src, uint32_t length, opa_t opa)
 {
     if (active && active->color_cpy)
         active->color_cpy(x1, y1, x2, y2, color_p);

@@ -18,8 +18,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 #include "misc/gfx/area.h"
-#include "../hal.h"
-#include "../../lv_obj/lv_dispi.h"
+#include <lvgl/lv_hal/lv_hal.h>
 
 /*********************
  *      DEFINES
@@ -59,10 +58,33 @@ typedef struct {
     bool (*get_data)(lv_hal_indev_data_t * data);   /*Function pointer to read data. Return 'true' if there is still data to be read (buffered)*/
 }lv_hal_indev_drv_t;
 
+struct __LV_OBJ_T;
+
+typedef struct _lv_indev_state_t
+{
+    bool pressed;
+    point_t act_point;
+    point_t last_point;
+    point_t vect;
+    point_t vect_sum;
+    struct __LV_OBJ_T * act_obj;
+    struct __LV_OBJ_T * last_obj;
+    uint32_t press_time_stamp;
+    uint32_t lpr_rep_time_stamp;
+
+    /*Flags*/
+    uint8_t drag_range_out  :1;
+    uint8_t drag_in_prog    :1;
+    uint8_t long_press_sent :1;
+    uint8_t wait_release    :1;
+    uint8_t reset_qry       :1;
+    uint8_t disable :1;
+}lv_indev_state_t;
+
+
 typedef struct _lv_indev_t {
     lv_hal_indev_drv_t drv;
-    lv_dispi_t dispi;
-    uint8_t disable :1;
+    lv_indev_state_t state;
     struct _lv_indev_t *next;
 } lv_indev_t;
 
@@ -76,32 +98,22 @@ typedef struct _lv_indev_t {
  * @param driver Input Device driver structure
  * @return 0 on success, -ve on error
  */
-int32_t lv_hal_indev_drv_register(lv_hal_indev_drv_t *driver);
+int32_t lv_indev_drv_register(lv_hal_indev_drv_t *driver);
+
 
 /**
- * @brief Input device driver must call this function to report new data
- *              from input device.
- *              TODO: Function is not thread safe
- * @param data Input device data
- * @return 0 on success, -ve on error
+ * Ask data fro man input device.
+ * @param data input device data
+ * @return false: no more data; true: there more data to read (buffered)
  */
-bool lv_hal_indev_get(lv_hal_indev_data_t *data);
+bool lv_indev_get(lv_indev_t * indev, lv_hal_indev_data_t *data);
 
 /**
- * Enable device by type
- *
- * @description Enable all input device defined by type
- *
- * @param type Input device type
+ * Get the next input device.
+ * @param indev pointer to the current input device. NULL to initialize.
+ * @return the next input devise or NULL if no more. Give the first input device when the parameter is NULL
  */
-void lv_hal_indev_enable(lv_hal_indev_type_t type, bool enable);
-
-/**
- *
- * @param drv
- * @return
- */
-lv_indev_t * lv_hal_indev_next(lv_indev_t * indev);
+lv_indev_t * lv_indev_next(lv_indev_t * indev);
 
 /**********************
  *      MACROS
