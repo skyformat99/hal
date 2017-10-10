@@ -40,15 +40,14 @@ static lv_indev_t *indev_list = NULL;
  * Register Input Device driver
  *
  * @param driver Input Device driver structure
- * @return 0 on success, -ve on error
+ * @return pointer to the new input device
  */
-int32_t lv_indev_drv_register(lv_hal_indev_drv_t *driver)
+lv_indev_t * lv_indev_drv_register(lv_hal_indev_drv_t *driver)
 {
     lv_indev_t *node;
 
     node = dm_alloc(sizeof(lv_indev_t));
-    if (!node)
-        return -LV_HAL_ERR_NOMEM;
+    if (!node) return NULL;
 
     memcpy(&node->drv, driver, sizeof(lv_hal_indev_drv_t));
 
@@ -64,7 +63,7 @@ int32_t lv_indev_drv_register(lv_hal_indev_drv_t *driver)
         last->next = node;
     }
 
-    return LV_HAL_OK;
+    return node;
 }
 
 /**

@@ -85,6 +85,7 @@ typedef struct _lv_indev_state_t
 typedef struct _lv_indev_t {
     lv_hal_indev_drv_t drv;
     lv_indev_state_t state;
+    struct __LV_OBJ_T * cursor;
     struct _lv_indev_t *next;
 } lv_indev_t;
 
@@ -98,7 +99,7 @@ typedef struct _lv_indev_t {
  * @param driver Input Device driver structure
  * @return 0 on success, -ve on error
  */
-int32_t lv_indev_drv_register(lv_hal_indev_drv_t *driver);
+lv_indev_t * lv_indev_drv_register(lv_hal_indev_drv_t *driver);
 
 
 /**
